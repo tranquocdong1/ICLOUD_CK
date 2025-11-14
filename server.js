@@ -1,19 +1,22 @@
 require("dotenv").config();
 const express = require("express");
+const cors = require("cors");
+const path = require("path");
+
 const app = express();
 
 app.use(express.json());
+app.use(cors());
 
-// Import routes
+app.use(express.static(path.join(__dirname, "frontend")));
+
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "frontend", "index.html"));
+});
+
 const productRoutes = require("./src/routes/products");
 app.use("/products", productRoutes);
 
-// Test route
-app.get("/", (req, res) => {
-  res.send("API đang chạy...");
-});
-
-// Start server
-app.listen(process.env.PORT, () => {
-  console.log(`Server chạy tại http://localhost:${process.env.PORT}`);
+app.listen(process.env.PORT || 3000, () => {
+  console.log(`Server chạy tại http://localhost:${process.env.PORT || 3000}`);
 });
